@@ -13,7 +13,6 @@ interface BarcodeSettings {
   text?: string;
   font?: string;
   fontSize?: number;
-  textColor?: string;
   backgroundColor?: string;
   lineColor?: string;
 }
@@ -43,7 +42,6 @@ export default function BarcodeGenerator() {
     displayValue: true,
     font: 'monospace',
     fontSize: 20,
-    textColor: '#000000',
     backgroundColor: '#ffffff',
     lineColor: '#000000'
   });
@@ -89,7 +87,6 @@ export default function BarcodeGenerator() {
         text: barcodeSettings.text || inputText,
         font: barcodeSettings.font,
         fontSize: barcodeSettings.fontSize,
-        fontColor: barcodeSettings.textColor,
         background: barcodeSettings.backgroundColor,
         lineColor: barcodeSettings.lineColor,
       });
@@ -203,8 +200,15 @@ export default function BarcodeGenerator() {
         if (exportSettings.format === 'svg') {
           const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
           JsBarcode(svg, item.barcode, {
-            ...barcodeSettings,
-            text: item.text
+            format: barcodeSettings.format,
+            width: barcodeSettings.width,
+            height: barcodeSettings.height,
+            displayValue: barcodeSettings.displayValue,
+            text: item.text,
+            font: barcodeSettings.font,
+            fontSize: barcodeSettings.fontSize,
+            background: barcodeSettings.backgroundColor,
+            lineColor: barcodeSettings.lineColor,
           });
           
           const svgData = new XMLSerializer().serializeToString(svg);
@@ -213,11 +217,15 @@ export default function BarcodeGenerator() {
           saveAs(blob, filename);
         } else {
           JsBarcode(canvas, item.barcode, {
-            ...barcodeSettings,
-            text: item.text,
+            format: barcodeSettings.format,
             width: barcodeSettings.width! * ratio,
             height: barcodeSettings.height! * ratio,
+            displayValue: barcodeSettings.displayValue,
+            text: item.text,
+            font: barcodeSettings.font,
             fontSize: barcodeSettings.fontSize! * ratio,
+            background: barcodeSettings.backgroundColor,
+            lineColor: barcodeSettings.lineColor,
           });
           
           canvas.toBlob((blob) => {
